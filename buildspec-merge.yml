@@ -15,8 +15,6 @@ phases:
       # タイムゾーンをJSTへ変換
       - export TZ="Asia/Tokyo"
       - echo $ENV
-      - git fetch --all
-      - git branch -a
   # # リモートリポジトリ確認
   # - git remote -v
   # - git branch
@@ -24,17 +22,11 @@ phases:
   build:
     commands:
       # # developブランチをmasterブランチへマージ
-      # - git switch master
-      # - git merge develop
+      - git switch master
+      - git -marge -X theirs develop --no-edit
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
-      # - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
-      # - git tag $TAG_NAME
-      # - git push origin master
-      # - git push origin $TAG_NAME
-      - echo "Switching to master"
-      - git checkout -b master 
-      - echo "Fetching develop"
-      - git fetch origin develop
-      - echo "Force-merging develop with 'theirs' strategy"
-      - git merge -X theirs develop --no-edit
+      - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
+      - git tag $TAG_NAME
+      - git push origin master
+      - git push origin $TAG_NAME
