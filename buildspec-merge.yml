@@ -3,8 +3,8 @@ version: 0.2
 env:
   # git認証情報ヘルパーを有効化##
   git-credential-helper: yes
-  variables:
-    ENV: "ut"
+  # variables:
+  #   ENV: "ut"
   # parameter-store:
   #   USER_NAME: "git-user-name"
   #   PAT: "git-pat"
@@ -14,7 +14,7 @@ phases:
     commands:
       # タイムゾーンをJSTへ変換
       - export TZ="Asia/Tokyo"
-      - echo $ENV
+      # - echo $ENV
   # # リモートリポジトリ確認
   # - git remote -v
   # - git branch
@@ -32,7 +32,9 @@ phases:
       - git merge -X theirs develop --allow-unrelated-histories --no-edit
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
+      - ENV=$(aws codebuild batch-get-projects --name $CODEBUILD_PROJECT_ARN --query 'projects[0].tags[?key=='Env'].value' --output text)
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
+      - echo $ENV
       - git tag $TAG_NAME
       - git push origin master
       - git push origin $TAG_NAME
