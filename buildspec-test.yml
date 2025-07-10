@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      # Testディレクトリ内のpackage.jsonの依存関係パッケージをインストール
+      - cd ./tests
+      - npm i
+  build:
+    commands:
+      # playwrightのテストを実施する
+      - npx playwright test
+
+# レポートの指定
+reports:
+  playwright-reports:
+    files:
+      - Test/reports/*.xml
+    file-format: "JUNITXML"
+
+# アーティファクトの指定
+artifacts:
+  files:
+    - Test/reports/*
+    - Test/tests/*
+  name: $CODEBUILD_BUILD_NUMBER
