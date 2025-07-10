@@ -12,19 +12,12 @@ env:
 phases:
   pre_build:
     commands:
-      # # タイムゾーンをJSTへ変換
-      # - export TZ="Asia/Tokyo"
-      # - echo $ENV
+      # タイムゾーンをJSTへ変換
+      - export TZ="Asia/Tokyo"
+      - echo $ENV
   # # リモートリポジトリ確認
   # - git remote -v
   # - git branch
-      - export TZ="Asia/Tokyo"
-      - echo $ENV
-      - echo "Git config"
-      - git config user.name "CodeBuild"
-      - git config user.email "codebuild@example.com"
-      - echo "Fetching develop branch"
-      - git fetch origin develop
 
   build:
     commands:
