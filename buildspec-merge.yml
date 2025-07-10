@@ -18,17 +18,16 @@ phases:
   # # リモートリポジトリ確認
   # - git remote -v
   # - git branch
-
-  install:
-    commands:
-      - git fetch --unshallow || echo "Repo already unshallowed"
-      - git fetch origin develop:develop
+      # ユーザー情報
+      - git config --global user.email daiki.tomimori@japan-systems.co.jp
+      - git config --global user.name "daiki tomimori"
 
   build:
     commands:
       # # developブランチをmasterブランチへマージ
       - git switch master
-      - git merge -X theirs develop --no-edit
+      - git merge -X theirs develop
+      - git merge develop
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
