@@ -40,7 +40,7 @@ phases:
       - echo "Switching to master"
       - git switch master
       - echo "Merging develop into master"
-      - git merge origin/develop
+      - git merge develop
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
       - git tag $TAG_NAME
       - git push origin master
