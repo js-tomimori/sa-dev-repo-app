@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 // const URL = "https://playwright.dev/";
-const URL = "18.183.66.110";
+const URL = "http://172.31.36.26";
 
 test("has title", async ({ page }) => {
   await page.goto(URL);
 
   // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Hello from Fargate!/);
+  await expect(page).toHaveTitle(/動作確認成功！！/);
   // await expect(page).toHaveTitle(/Playwright/);
 });
 
