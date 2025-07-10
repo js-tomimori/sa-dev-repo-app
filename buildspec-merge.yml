@@ -12,20 +12,35 @@ env:
 phases:
   pre_build:
     commands:
-      # タイムゾーンをJSTへ変換
-      - export TZ="Asia/Tokyo"
-      - echo $ENV
+      # # タイムゾーンをJSTへ変換
+      # - export TZ="Asia/Tokyo"
+      # - echo $ENV
   # # リモートリポジトリ確認
   # - git remote -v
   # - git branch
+      - export TZ="Asia/Tokyo"
+      - echo $ENV
+      - echo "Git config"
+      - git config user.name "CodeBuild"
+      - git config user.email "codebuild@example.com"
+      - echo "Fetching develop branch"
+      - git fetch origin develop
 
   build:
     commands:
-      # developブランチをmasterブランチへマージ
+      # # developブランチをmasterブランチへマージ
+      # - git switch master
+      # - git merge develop
+      # # タグ付け
+      # # TODO: CodePipelineのタグ情報から環境を取得する
+      # - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
+      # - git tag $TAG_NAME
+      # - git push origin master
+      # - git push origin $TAG_NAME
+      - echo "Switching to master"
       - git switch master
-      - git merge develop
-      # タグ付け
-      # TODO: CodePipelineのタグ情報から環境を取得する
+      - echo "Merging develop into master"
+      - git merge origin/develop
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
       - git tag $TAG_NAME
       - git push origin master
