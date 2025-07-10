@@ -33,12 +33,7 @@ phases:
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
       - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
-      - ENV=$(aws codebuild batch-get-projects \
-          --names "$PROJECT_NAME" \
-          --query "projects[0].tags[?key=='Env'].value" \
-          --output text)
-      - echo "Env = $ENV"
-      # - ENV=$(aws codebuild batch-get-projects --name $CODEBUILD_PROJECT_ARN --query 'projects[0].tags[?key=='Env'].value' --output text)
+      - ENV=$(aws codebuild batch-get-projects --name $PROJECT_NAME --query 'projects[0].tags[?key=='Env'].value' --output text)
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
       - echo $CODEBUILD_PROJECT_ARN
       - echo $ENV
