@@ -32,9 +32,10 @@ phases:
       - git merge -X theirs develop --allow-unrelated-histories --no-edit
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
-      - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
-      - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
-      - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
+      # - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
+      # - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
+      # - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
+      - TAG_NAME="v.$(date +%Y-%m-%d_%H%M)"
       - echo $PROJECT_NAME
       - echo $ENV
       - git tag $TAG_NAME

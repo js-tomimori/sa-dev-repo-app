@@ -7,7 +7,7 @@ env:
     # BuildKitを有効化(キャッシュ)
     DOCKER_BUILDKIT: "1"
     # IMAGE_REPO_NAME: "sa-ut-ecr-app"
-    # CONTAINER_NAME: "web"
+    CONTAINER_NAME: "web"
   parameter-store:
     AWS_ACCOUNT_ID: "account-id"
 
@@ -24,18 +24,10 @@ phases:
       - git fetch --tags
       - LATEST_TAG=$(git describe --tags --abbrev=0)
       - echo "Latest tag is $LATEST_TAG"
+      # 環境に応じたECRリポジトリ名を設定
       - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
       - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
-      # 環境に応じたECRリポジトリ名を設定
-      - |
-        if [ "$ENV" = "ut" ]; then
-          export IMAGE_REPO_NAME="sa-ut-ecr-app"
-        elif [ "$ENV" = "ita" ]; then
-          export IMAGE_REPO_NAME="sa-ita-ecr-app"
-        else
-          echo "Unknown environment: $ENV"
-          exit 1
-        fi
+      - IMAGE_REPO_NAME="sa-${ENV}-ecr-app"
   build:
     commands:
       - echo Build started on `date`
@@ -44,24 +36,15 @@ phases:
       - docker build -t $IMAGE_REPO_NAME:$LATEST_TAG .
       # タグ付け
       # TODO: タグをSourceステージの変数から取得する
-      - |
-        if [ "$ENV" = "ut" ]; then
-          export PUSH_TAG=$LATEST_TAG
-        else
-          export PUSH_TAG="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
-        fi
-      - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$PUSH_TAG
-      # - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
+      - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$PUSH_TAG
-      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$PUSH_TAG > imagedefinitions.json
-      # # ECRへプッシュ
-      # - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
-      # # イメージ定義ファイル生成
-      # - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > imagedefinitions.json
+      # ECRへプッシュ
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
+      # イメージ定義ファイル生成
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > imagedefinitions.json
 
 # アーティファクト出力
 artifacts:
