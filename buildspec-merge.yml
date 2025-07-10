@@ -23,7 +23,7 @@ phases:
     commands:
       # # developブランチをmasterブランチへマージ
       - git switch master
-      - git -marge -X theirs develop --no-edit
+      - git marge -X theirs develop --no-edit
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
