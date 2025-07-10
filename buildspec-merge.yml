@@ -20,7 +20,7 @@ phases:
   # - git branch
 
   phases:
-  install:
+   install:
     commands:
       - git fetch --unshallow || echo "Repo already unshallowed"
       - git fetch origin develop:develop
