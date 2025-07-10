@@ -31,10 +31,8 @@ phases:
       # - git push origin master
       # - git push origin $TAG_NAME
       - echo "Switching to master"
-      - git switch master
-      - echo "Merging develop into master"
-      - git merge develop
-      - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
-      - git tag $TAG_NAME
-      - git push origin master
-      - git push origin $TAG_NAME
+      - git checkout -B master origin/master
+      - echo "Fetching develop"
+      - git fetch origin develop
+      - echo "Force-merging develop with 'theirs' strategy"
+      - git merge -X theirs origin/develop --no-edit
