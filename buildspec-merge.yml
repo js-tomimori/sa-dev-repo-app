@@ -19,9 +19,7 @@ phases:
   # - git remote -v
   # - git branch
       # ユーザー情報
-      - git config --global user.email daiki.tomimori@japan-systems.co.jp
-      - git config --global user.name "daiki tomimori"
-      - git fetch origin  # ✅ これが超重要！
+      - git fetch origin
       - git checkout master
       - git pull origin master
 
@@ -29,7 +27,6 @@ phases:
     commands:
       # # developブランチをmasterブランチへマージ
       - git switch master
-      - git merge -X theirs develop
       - git merge develop
       # # タグ付け
       # # TODO: CodePipelineのタグ情報から環境を取得する
