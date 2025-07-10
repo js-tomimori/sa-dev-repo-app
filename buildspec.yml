@@ -31,8 +31,7 @@ phases:
       # ビルド
       - docker build -t $IMAGE_REPO_NAME:$LATEST_TAG .
       # タグ付け
-      # TODO: タグをSourceステージの変数から取得する
-      - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
+      - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG || true
   post_build:
     commands:
       - echo Build completed on `date`
