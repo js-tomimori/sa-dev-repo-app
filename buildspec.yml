@@ -1,7 +1,7 @@
 version: 0.2
 
 env:
-  # git認証情報ヘルパーを有効化
+  # git認証情報ヘルパーを有効化##
   git-credential-helper: yes
   variables:
     # BuildKitを有効化(キャッシュ)

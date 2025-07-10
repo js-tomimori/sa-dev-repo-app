@@ -1,4 +1,4 @@
-# 疑似アプリ用Dockerfile
+# 疑似アプリ用Dockerfile##
 
 # ベースイメージはnginxを利用
 FROM public.ecr.aws/nginx/nginx:stable-perl
