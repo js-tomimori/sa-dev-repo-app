@@ -21,6 +21,10 @@ phases:
       # ユーザー情報
       - git config --global user.email daiki.tomimori@japan-systems.co.jp
       - git config --global user.name "daiki tomimori"
+      - git fetch origin  # ✅ これが超重要！
+      - git checkout master
+      - git pull origin master
+      - git checkout -b develop origin/develop  # ✅ developブランチをローカルに作成
 
   build:
     commands:
