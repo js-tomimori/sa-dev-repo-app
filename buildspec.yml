@@ -12,20 +12,6 @@ env:
     AWS_ACCOUNT_ID: "account-id"
 
 phases:
-  # pre_build:
-  #   commands:
-  #     # タイムゾーンをJSTへ変換
-  #     - export TZ="Asia/Tokyo"
-  #     # AWSへのログイン
-  #     - echo Logging in to Amazon ECR...
-  #     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-  #     # タグ情報をSourceから取得
-  #     - git switch master
-  #     - git fetch --tags
-  #     - LATEST_TAG=$(git describe --tags --abbrev=0)
-  #     - echo "Latest tag is $LATEST_TAG"
-  #     - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
-  #     - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
   pre_build:
     commands:
       # タイムゾーンをJSTへ変換
@@ -33,29 +19,27 @@ phases:
       # AWSへのログイン
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-
-      # タグ取得
+      # タグ情報をSourceから取得
       - git switch master
       - git fetch --tags
       - LATEST_TAG=$(git describe --tags --abbrev=0)
       - echo "Latest tag is $LATEST_TAG"
-
-      # CodeBuildタグ取得
       - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
       - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
-
-      # ECRリポジトリ名取得（Envタグ一致）
-      - MATCHING_ECR_REPO=$(for repo in $(aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text); do
-          TAG_VALUE=$(aws ecr list-tags-for-resource \
-            --resource-arn $(aws ecr describe-repositories --repository-names "$repo" --query 'repositories[0].repositoryArn' --output text) \
-            --query "tags[?key=='Env'].value" --output text);
-          if [ "$TAG_VALUE" = "$ENV" ]; then
-            echo $repo;
-            break;
-          fi
-        done)
-      - export IMAGE_REPO_NAME=$MATCHING_ECR_REPO
-      - echo "Using ECR repo: $IMAGE_REPO_NAME"
+      # 環境に応じたECRリポジトリ名を設定
+      - |
+        case "$ENV" in
+          ut)
+            export IMAGE_REPO_NAME="sa-ut-ecr-app"
+            ;;
+          ita)
+            export IMAGE_REPO_NAME="sa-ita-ecr-app"
+            ;;
+            echo "Unknown ENV: $ENV"
+            exit 1
+            ;;
+        esac
+      - echo "Using ECR repository: $IMAGE_REPO_NAME"
   build:
     commands:
       - echo Build started on `date`
