@@ -1,24 +1,49 @@
 version: 0.2
 
+env:
+  # git認証情報ヘルパーを有効化##
+  git-credential-helper: yes
+  variables:
+    # BuildKitを有効化(キャッシュ)
+    DOCKER_BUILDKIT: "1"
+    IMAGE_REPO_NAME: "sa-ut-ecr-app"
+    CONTAINER_NAME: "web"
+  parameter-store:
+    AWS_ACCOUNT_ID: "account-id"
+
 phases:
   pre_build:
     commands:
+      # タイムゾーンをJSTへ変換
+      - export TZ="Asia/Tokyo"
+      # AWSへのログイン
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      # タグ情報をSourceから取得
+      - git switch master
+      - git fetch --tags
+      - LATEST_TAG=$(git describe --tags --abbrev=0)
+      - echo "Latest tag is $LATEST_TAG"
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
+      - echo Building the Docker image...
+      # ビルド
+      - docker build -t $IMAGE_REPO_NAME:$LATEST_TAG .
+      # タグ付け
+      # TODO: タグをSourceステージの変数から取得する
+      - docker tag $IMAGE_REPO_NAME:$LATEST_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - printf '{"ImageURI":"%s"}' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imageDetail.json
+      # ECRへプッシュ
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
+      # イメージ定義ファイル生成
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > imagedefinitions.json
 
-# S3 Unable to access Error 対策 
+# アーティファクト出力
 artifacts:
   files:
-    - imageDetail.json
+    - imagedefinitions.json
+  name: build-$(date +%Y-%m-%d_%H%M).zip
