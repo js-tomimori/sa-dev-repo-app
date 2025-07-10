@@ -35,7 +35,7 @@ phases:
       - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
       - ENV=$(aws codebuild batch-get-projects --name $PROJECT_NAME --query 'projects[0].tags[?key=='Env'].value' --output text)
       - TAG_NAME="v.${ENV}_$(date +%Y-%m-%d_%H%M)"
-      - echo $CODEBUILD_PROJECT_ARN
+      - echo $PROJECT_NAME
       - echo $ENV
       - git tag $TAG_NAME
       - git push origin master
