@@ -24,7 +24,7 @@ phases:
       - git fetch origin  # ✅ これが超重要！
       - git checkout master
       - git pull origin master
-      - git checkout -b develop origin/develop  # ✅ developブランチをローカルに作成
+      - git checkout -b develop develop  # ✅ developブランチをローカルに作成
 
   build:
     commands:
