@@ -27,19 +27,8 @@ phases:
       - PROJECT_NAME=$(echo $CODEBUILD_PROJECT_ARN | awk -F'[:/]' '{print $NF}')
       - ENV=$(aws codebuild batch-get-projects --name "$PROJECT_NAME" --query "projects[0].tags[?key=='Env'].value" --output text)
       # 環境に応じたECRリポジトリ名を設定
-      - |
-        case "$ENV" in
-          ut)
-            export IMAGE_REPO_NAME="sa-ut-ecr-app"
-            ;;
-          ita)
-            export IMAGE_REPO_NAME="sa-ita-ecr-app"
-            ;;
-            echo "Unknown ENV: $ENV"
-            exit 1
-            ;;
-        esac
-      - echo "Using ECR repository: $IMAGE_REPO_NAME"
+      - if [ "$ENV" = "ut" ]; then export IMAGE_REPO_NAME="sa-ut-ecr-app";
+      - if [ "$ENV" = "ita" ]; then export IMAGE_REPO_NAME="sa-ita-ecr-app";
   build:
     commands:
       - echo Build started on `date`
