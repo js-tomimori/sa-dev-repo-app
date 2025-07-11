@@ -45,7 +45,7 @@ reports:
     file-format: "JUNITXML" 
 artifacts:
   files:
-    - Test/reports/*
-    - Test/tests/*
+    - tests/reports/*
+    - tests/tests/*
   name: $CODEBUILD_BUILD_NUMBER
  
