@@ -39,6 +39,7 @@ phases:
    commands:
       - cd ./tests
       - npm ci
+      - npm install dotenv --save-dev
   pre_build:
     commands:
       - echo Getting ECS task IP...
