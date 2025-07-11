@@ -35,7 +35,8 @@ env:
     CONTAINER_PORT: 80
  
 phases:
-  commands:
+  install:
+   commands:
       - cd ./tests
       - npm ci
   pre_build:
