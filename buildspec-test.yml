@@ -35,6 +35,9 @@ phases:
       - echo Running Playwright tests...
       - cd ./tests
       - mkdir -p reports
+      - echo "ディレクトリ"
+      - pwd
+      - ls -i
       - echo "Contents of .env:"
       - cat .env
       - npx playwright install
