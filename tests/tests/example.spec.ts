@@ -5,9 +5,10 @@ dotenv.config(); // .env を読み込み
  
 const URL = process.env.BASE_URL ?? "http://localhost:3000";
  
-test("has title", async ({ page }) => {
+test("動作確認成功！！", async ({ page }) => {
   await page.goto(URL);
   await expect(page).toHaveTitle(/Hello from Fargate!/);
+  await expect(page.getByText('動作確認成功！！')).toBeVisible();
 });
 
 // const URL = "https://playwright.dev/";
