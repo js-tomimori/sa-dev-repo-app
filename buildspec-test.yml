@@ -1,31 +1,3 @@
-# version: 0.2
-
-# phases:
-#   install:
-#     commands:
-#       # Testディレクトリ内のpackage.jsonの依存関係パッケージをインストール
-#       - cd ./tests
-#       - npm i
-  
-#   build:
-#     commands:
-#       # playwrightのテストを実施する
-#       - npx playwright test
-
-# # レポートの指定
-# reports:
-#   playwright-reports:
-#     files:
-#       - Test/reports/*.xml
-#     file-format: "JUNITXML"
-
-# # アーティファクトの指定
-# artifacts:
-#   files:
-#     - Test/reports/*
-#     - Test/tests/*
-#   name: $CODEBUILD_BUILD_NUMBER
-
 version: 0.2
  
 env:
@@ -54,13 +26,10 @@ phases:
       # - echo "BASE_URL=http://$PRIVATE_IP" >> ./tests/.env
       # - cat ./tests/.env
       # パブリックIP取得
-      # - PUBLIC_IP=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].networkInterfaces[0].publicIpv4Address' --output text)
       - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> ./tests/.env
       - cat ./tests/.env
-      # - echo "BASE_URL=http://$PUBLIC_IP" >> $CODEBUILD_SRC_DIR/tests/.env
-      # - cat $CODEBUILD_SRC_DIR/tests/.env
   build:
     commands:
       - echo Running Playwright tests...
@@ -69,16 +38,14 @@ phases:
       - cat .env
       - npx playwright install
       - npx playwright test
-      # - npx playwright install --with-deps
-      # - npx playwright test --project=chromium
 reports:
   playwright-reports:
     files:
-      - reports/*.xml
+      - tests/reports/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
-    - tests/reports/*
-    - tests/tests/*
+    - Test/reports/*
+    - Test/tests/*
   name: $CODEBUILD_BUILD_NUMBER
  
