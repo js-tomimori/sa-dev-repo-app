@@ -45,8 +45,11 @@ phases:
       # タスクARN取得#
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
       - echo "$TASK_ARN"
+      # ENI取得
+      - ENI_ID=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value'  --output text)
       # パブリックIP取得
-      - PUBLIC_IP=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].networkInterfaces[0].publicIpv4Address' --output text)
+      # - PUBLIC_IP=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].networkInterfaces[0].publicIpv4Address' --output text)
+      - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> $CODEBUILD_SRC_DIR/tests/.env
   build:
