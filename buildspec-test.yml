@@ -45,7 +45,7 @@ phases:
       # タスクARN取得#
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
       # パブリックIP取得
-      - PUBLIC_IP=$(aws ecs describe-tasks --cluster your-cluster --tasks $TASK_ARN --query 'tasks[0].containers[0].networkInterfaces[0].publicIpv4Address' --output text)
+      - PUBLIC_IP=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].networkInterfaces[0].publicIpv4Address' --output text)
       - echo $PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> $CODEBUILD_SRC_DIR/tests/.env
   build:
