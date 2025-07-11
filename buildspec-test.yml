@@ -57,6 +57,8 @@ phases:
     commands:
       - echo Running Playwright tests...
       - cd ./tests
+      - echo "Contents of .env:"
+      - cat .env
       - npx playwright test
       # - npx playwright install --with-deps
       # - npx playwright test --project=chromium
