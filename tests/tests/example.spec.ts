@@ -1,15 +1,25 @@
 import { test, expect } from "@playwright/test";
+import * as dotenv from "dotenv";
 
-// const URL = "https://playwright.dev/";
-const URL = "http://172.31.36.26";
-
+dotenv.config(); // .env を読み込み
+ 
+const URL = process.env.BASE_URL ?? "http://localhost:3000";
+ 
 test("has title", async ({ page }) => {
   await page.goto(URL);
-
-  // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/動作確認成功！！/);
-  // await expect(page).toHaveTitle(/Playwright/);
 });
+
+// const URL = "https://playwright.dev/";
+// const URL = "http://172.31.36.26";
+
+// test("has title", async ({ page }) => {
+//   await page.goto(URL);
+
+//   // Expect a title "to contain" a substring.
+//   await expect(page).toHaveTitle(/動作確認成功！！/);
+//   // await expect(page).toHaveTitle(/Playwright/);
+// });
 
 // test("get started link", async ({ page }) => {
 //   await page.goto("https://playwright.dev/");
@@ -22,3 +32,5 @@ test("has title", async ({ page }) => {
 //     page.getByRole("heading", { name: "Installation" })
 //   ).toBeVisible();
 // });
+
+
