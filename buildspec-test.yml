@@ -52,6 +52,7 @@ phases:
       - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> $CODEBUILD_SRC_DIR/tests/.env
+      - cat $CODEBUILD_SRC_DIR/tests/.env
   build:
     commands:
       - echo Running Playwright tests...
