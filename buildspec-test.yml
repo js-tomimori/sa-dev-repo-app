@@ -38,8 +38,10 @@ phases:
   install:
     runtime-versions:
       nodejs: 18
+      python: 3.8
     commands:
       - echo Installing dependencies...
+      - pip install --upgrade awscli
       - cd ./tests
       - npm ci
   pre_build:
