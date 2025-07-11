@@ -41,7 +41,7 @@ phases:
 reports:
   playwright-reports:
     files:
-      - ./tests/*.xml
+      - tests/reports/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
