@@ -41,11 +41,11 @@ phases:
 reports:
   playwright-reports:
     files:
-      - reports/*.xml
+      - Test/reports/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
-    - tests/reports/*
-    - tests/tests/*
+    - Test/reports/*
+    - Test/tests/*
   name: $CODEBUILD_BUILD_NUMBER
  
