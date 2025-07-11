@@ -35,11 +35,7 @@ env:
     CONTAINER_PORT: 80
  
 phases:
-  install:
-    runtime-versions:
-      nodejs: 18
-      python: 3.8
-    commands:
+  commands:
       - cd ./tests
       - npm ci
   pre_build:
