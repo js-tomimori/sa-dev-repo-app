@@ -7,7 +7,7 @@ const URL = process.env.BASE_URL ?? "http://localhost:3000";
  
 test("has title", async ({ page }) => {
   await page.goto(URL);
-  await expect(page).toHaveTitle(/動作確認成功！！/);
+  await expect(page).toHaveTitle(/Hello from Fargate!/);
 });
 
 // const URL = "https://playwright.dev/";
