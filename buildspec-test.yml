@@ -37,7 +37,7 @@ phases:
     commands:
       - echo Running Playwright tests...
       - echo "Contents of .env:"
-      # - cd ./Test
+      - cd ./tests
       - echo "ディレクト2"
       - pwd
       - ls -i
