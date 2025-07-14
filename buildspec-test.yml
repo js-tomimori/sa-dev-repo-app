@@ -31,34 +31,20 @@ phases:
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> ./.env
       - cat ./.env
-      - echo "ディレクトリ1"
-      - pwd
-      - ls -i
   build:
    commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - echo Running Playwright tests...
-      - echo "Contents of .env:"
-      # - cd ./tests
-      - echo "ディレクト2"
-      - pwd
-      - ls -i
-      # - echo "Contents of .env:"
-      # - cat .env
       - npx playwright install
       - npx playwright test
-      # - cd ../
-      # - cd ./playwright-report
-      # - pwd
-      # - ls -i
 reports:
   playwright-reports:
    files:
-      - Test/playwright-report/*.xml
+      - Test/reports/*.xml
    file-format: "JUNITXML" 
 artifacts:
   files:
-    - tests/reports/*
-    - tests/tests/*
+    - Test/reports/*
+    - Test/tests/*
   name: $CODEBUILD_BUILD_NUMBER
  
