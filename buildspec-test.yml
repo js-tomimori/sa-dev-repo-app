@@ -33,7 +33,6 @@ phases:
   build:
     commands:
       - echo Running Playwright tests...
-      - mkdir -p reports
       - echo "Contents of .env:"
       - cd ./tests
       - echo "ディレクトリ"
@@ -44,12 +43,13 @@ phases:
       - npx playwright install
       - npx playwright test
       - cd ../
+      - cd ./playwright-report
       - pwd
       - ls -i
 reports:
   playwright-reports:
     files:
-      - ./reports/*.xml
+      - playwright-report/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
