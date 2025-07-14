@@ -43,11 +43,13 @@ phases:
       - cat .env
       - npx playwright install
       - npx playwright test
-      - ls tests/reports/results.xml
+      - cd ../
+      - pwd
+      - ls -i
 reports:
   playwright-reports:
     files:
-      - ../reports/*.xml
+      - ./reports/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
