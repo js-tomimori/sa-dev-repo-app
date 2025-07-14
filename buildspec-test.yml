@@ -34,7 +34,7 @@ phases:
     commands:
       - echo Running Playwright tests...
       - echo "Contents of .env:"
-      - cd ./tests
+      # - cd ./tests
       - echo "ディレクトリ"
       - pwd
       - ls -i
@@ -46,13 +46,10 @@ phases:
       - cd ./playwright-report
       - pwd
       - ls -i
-      - cd Test
-      - pwd
-      - ls -i
 reports:
   playwright-reports:
     files:
-      - tests/playwright-report/*.xml
+      - playwright-report/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
