@@ -42,10 +42,10 @@ phases:
       # - cat .env
       - npx playwright install
       - npx playwright test
-      - cd ../
-      - cd ./playwright-report
-      - pwd
-      - ls -i
+      # - cd ../
+      # - cd ./playwright-report
+      # - pwd
+      # - ls -i
 reports:
   playwright-reports:
     files:
