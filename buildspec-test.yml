@@ -46,10 +46,13 @@ phases:
       - cd ./playwright-report
       - pwd
       - ls -i
+      - cd Test
+      - pwd
+      - ls -i
 reports:
   playwright-reports:
     files:
-      - playwright-report/*.xml
+      - tests/playwright-report/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
