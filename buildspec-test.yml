@@ -28,8 +28,8 @@ phases:
       # パブリックIP取得
       - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
       - echo "$PUBLIC_IP"
-      - echo "BASE_URL=http://$PUBLIC_IP" >> Test/.env
-      - cat Test/.env
+      - echo "BASE_URL=http://$PUBLIC_IP" >> ./.env
+      - cat ./.env
       - echo "ディレクトリ1"
       - pwd
       - ls -i
