@@ -9,11 +9,12 @@ env:
 phases:
   install:
    commands:
-      - cd ./Test
+      - cd Test
       - npm ci
       - npm install dotenv --save-dev
   pre_build:
-    commands:
+   commands:
+      - cd Test
       - echo Getting ECS task IP...
       # タスクARN取得
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
@@ -34,7 +35,8 @@ phases:
       - pwd
       - ls -i
   build:
-    commands:
+   commands:
+      - cd Test
       - echo Running Playwright tests...
       - echo "Contents of .env:"
       # - cd ./tests
@@ -51,9 +53,9 @@ phases:
       # - ls -i
 reports:
   playwright-reports:
-    files:
+   files:
       - Test/playwright-report/*.xml
-    file-format: "JUNITXML" 
+   file-format: "JUNITXML" 
 artifacts:
   files:
     - tests/reports/*
