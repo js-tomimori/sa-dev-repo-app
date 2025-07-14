@@ -9,12 +9,12 @@ env:
 phases:
   install:
    commands:
-      - cd Test
+      - cd $CODEBUILD_SRC_DIR/Test
       - npm ci
       - npm install dotenv --save-dev
   pre_build:
    commands:
-      - cd Test
+      - cd $CODEBUILD_SRC_DIR/Test
       - echo Getting ECS task IP...
       # タスクARN取得
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
@@ -36,7 +36,7 @@ phases:
       - ls -i
   build:
    commands:
-      - cd Test
+      - cd $CODEBUILD_SRC_DIR/Test
       - echo Running Playwright tests...
       - echo "Contents of .env:"
       # - cd ./tests
