@@ -36,7 +36,7 @@ phases:
     commands:
       - echo Running Playwright tests...
       - mkdir -p reports
-      # - cd ./tests
+      - cd ./tests
       - echo "ディレクトリ"
       - pwd
       - ls -i
