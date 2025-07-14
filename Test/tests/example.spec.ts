@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import * as dotenv from "dotenv";
+import * as dotenv from "Test/dotenv";
 
 dotenv.config(); // .env を読み込み
  
