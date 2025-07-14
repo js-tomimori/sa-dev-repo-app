@@ -33,7 +33,7 @@ phases:
   build:
     commands:
       - echo Running Playwright tests...
-      - cd ./tests
+      # - cd ./tests
       - mkdir -p reports
       - echo "ディレクトリ"
       - pwd
@@ -45,7 +45,7 @@ phases:
 reports:
   playwright-reports:
     files:
-      - ./tests/reports/*.xml
+      - ./reports/*.xml
     file-format: "JUNITXML" 
 artifacts:
   files:
