@@ -7,7 +7,7 @@ env:
     # BuildKitを有効化(キャッシュ)#
     DOCKER_BUILDKIT: "1"
     # IMAGE_REPO_NAME: "sa-ut-ecr-app"
-    CONTAINER_NAME: "web"
+    CONTAINER_NAME: "sa-container-webautt"
   parameter-store:
     AWS_ACCOUNT_ID: "account-id"
 
