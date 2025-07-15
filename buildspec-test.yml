@@ -45,11 +45,20 @@ phases:
         set -e
         echo "Test exit code: $TEST_EXIT_CODE"
 
+        echo "Publishing to SNS..."
         if [ $TEST_EXIT_CODE -eq 0 ]; then
-          aws sns publish --topic-arn "$SNS_TOPIC_ARN" --subject "✅ Playwright Test Succeeded" --message "All Playwright tests passed successfully in CodeBuild."
+          aws sns publish \
+            --topic-arn "$SNS_TOPIC_ARN" \
+            --subject "✅ Playwright Test Succeeded" \
+            --message "All Playwright tests passed successfully in CodeBuild." || echo "SNS publish success message failed"
         else
-          aws sns publish --topic-arn "$SNS_TOPIC_ARN" --subject "❌ Playwright Test Failed" --message "Some Playwright tests failed in CodeBuild. Please review the logs."
+          aws sns publish \
+            --topic-arn "$SNS_TOPIC_ARN" \
+            --subject "❌ Playwright Test Failed" \
+            --message "Some Playwright tests failed in CodeBuild. Please review the logs." || echo "SNS publish failure message failed"
         fi
+
+        echo "Done publishing. Exiting with code: $TEST_EXIT_CODE"
         exit $TEST_EXIT_CODE
 
 reports:
