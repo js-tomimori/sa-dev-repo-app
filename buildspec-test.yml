@@ -9,20 +9,27 @@ env:
 
 phases:
   install:
-    commands:
+   commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - npm ci
       - npm install dotenv --save-dev
-
   pre_build:
-    commands:
+   commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - echo Getting ECS task IP...
+      # タスクARN取得
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
-      - echo "TASK_ARN: $TASK_ARN"
+      - echo "$TASK_ARN"
+      # ENI取得
       - ENI_ID=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value'  --output text)
+      # プライベートIP取得
+      # - PRIVATE_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].PrivateIpAddress' --output text)
+      # - echo "$PRIVATE_IP"
+      # - echo "BASE_URL=http://$PRIVATE_IP" >> ./tests/.env
+      # - cat ./tests/.env
+      # パブリックIP取得
       - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
-      - echo "PUBLIC_IP: $PUBLIC_IP"
+      - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> ./.env
       - cat ./.env
 
