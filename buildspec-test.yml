@@ -1,12 +1,11 @@
 version: 0.2
-
+ 
 env:
   variables:
     CLUSTER_NAME: "sa-ita-ecscls-test"
     SERVICE_NAME: "sa-ita-ecstaskdef-ecstaskdef-web-service-3pcbomrv"
     CONTAINER_PORT: 80
-    SNS_TOPIC_ARN: "arn:aws:sns:ap-northeast-1:020359319247:sa-ita-topic-test"
-
+ 
 phases:
   install:
    commands:
@@ -17,7 +16,7 @@ phases:
    commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - echo Getting ECS task IP...
-      # タスクARN取得#
+      # タスクARN取得
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
       - echo "$TASK_ARN"
       # ENI取得
@@ -32,43 +31,20 @@ phases:
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> ./.env
       - cat ./.env
-
   build:
-    commands:
+   commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - echo Running Playwright tests...
       - npx playwright install
-      - |
-        set +e
-        npx playwright test
-        TEST_EXIT_CODE=$?
-        set -e
-        echo "Test exit code: $TEST_EXIT_CODE"
-
-        echo "Publishing to SNS..."
-        if [ $TEST_EXIT_CODE -eq 0 ]; then
-          aws sns publish \
-            --topic-arn "$SNS_TOPIC_ARN" \
-            --subject "✅ Playwright Test Succeeded" \
-            --message "All Playwright tests passed successfully in CodeBuild." || echo "SNS publish success message failed"
-        else
-          aws sns publish \
-            --topic-arn "$SNS_TOPIC_ARN" \
-            --subject "❌ Playwright Test Failed" \
-            --message "Some Playwright tests failed in CodeBuild. Please review the logs." || echo "SNS publish failure message failed"
-        fi
-
-        echo "Done publishing. Exiting with code: $TEST_EXIT_CODE"
-        exit $TEST_EXIT_CODE
-
+      - npx playwright test
 reports:
   playwright-reports:
-    files:
+   files:
       - Test/reports/*.xml
-    file-format: "JUNITXML"
-
+   file-format: "JUNITXML" 
 artifacts:
   files:
     - Test/reports/*
     - Test/tests/*
-  name: "testtest"
+  name: $CODEBUILD_BUILD_NUMBER
+ 
