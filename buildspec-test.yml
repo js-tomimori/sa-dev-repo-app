@@ -26,7 +26,7 @@ phases:
       # - echo "$PRIVATE_IP"
       # - echo "BASE_URL=http://$PRIVATE_IP" >> ./tests/.env
       # - cat ./tests/.env
-      # パブリックIP取得#
+      # パブリックIP取得
       - PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
       - echo "$PUBLIC_IP"
       - echo "BASE_URL=http://$PUBLIC_IP" >> ./.env
