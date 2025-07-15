@@ -71,4 +71,4 @@ artifacts:
   files:
     - Test/reports/*
     - Test/tests/*
-  name: $CODEBUILD_BUILD_NUMBER
+  name: "testtest"
