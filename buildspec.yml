@@ -14,7 +14,7 @@ env:
 phases:
   pre_build:
     commands:
-      # タイムゾーンをJSTへ変換#
+      # タイムゾーンをJSTへ変換
       - export TZ="Asia/Tokyo"
       # AWSへのログイン
       - echo Logging in to Amazon ECR...
