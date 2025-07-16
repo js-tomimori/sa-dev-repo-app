@@ -16,7 +16,7 @@ phases:
    commands:
       - cd $CODEBUILD_SRC_DIR/Test
       - echo Getting ECS task IP...
-      # タスクARN取得
+      # タスクARN取得?
       - TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name $SERVICE_NAME --query 'taskArns[0]' --output text)
       - echo "$TASK_ARN"
       # ENI取得
