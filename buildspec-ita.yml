@@ -9,7 +9,7 @@ env:
     # コンテナ名
     CONTAINER_APP_NAME: "sa-container-web"
     CONTAINER_BATCH_NAME: "sa-container-batch"
-    CONTAINER_AUTT_NAME: "sa-container-autt-poc"
+    CONTAINER_AUTT_NAME: "sa-container-webautt"
     # イメージ定義ファイル名
     IMAGEDEF_APP_FILE_NAME: "imagedef-web.json"
     IMAGEDEF_BATCH_FILE_NAME: "imagedef-batch.json"
