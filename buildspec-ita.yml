@@ -57,7 +57,7 @@ phases:
 # アーティファクト出力
 artifacts:
   files:
-    - IMAGEDEF_APP_FILE_NAME
+    - $IMAGEDEF_APP_FILE_NAME
     - $IMAGEDEF_BATCH_FILE_NAME
     - $IMAGEDEF_AUTT_FILE_NAME
   name: build-$(date +%Y-%m-%d_%H%M).zip
