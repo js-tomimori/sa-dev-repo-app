@@ -6,8 +6,14 @@ env:
   variables:
     # BuildKitを有効化(キャッシュ)#
     DOCKER_BUILDKIT: "1"
-    # IMAGE_REPO_NAME: "sa-ut-ecr-app"
-    # CONTAINER_NAME: "sa-container-webautt"
+    # コンテナ名
+    CONTAINER_APP_NAME: "sa-container-web"
+    CONTAINER_BATCH_NAME: "sa-container-batch"
+    CONTAINER_AUTT_NAME: "sa-container-autt"
+    # イメージ定義ファイル名
+    IMAGEDEF_APP_FILE_NAME: "imagedef-web.json"
+    IMAGEDEF_BATCH_FILE_NAME: "imagedef-batch.json"
+    IMAGEDEF_AUTT_FILE_NAME: "imagedef-autt.json"
   parameter-store:
     AWS_ACCOUNT_ID: "account-id"
 
@@ -44,10 +50,14 @@ phases:
       # ECRへプッシュ
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG
       # イメージ定義ファイル生成
-      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_APP_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > $IMAGEDEF_APP_FILE_NAME
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_BATCH_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > $IMAGEDEF_BATCH_FILE_NAME
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_AUTT_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$LATEST_TAG > $IMAGEDEF_AUTT_FILE_NAME
 
 # アーティファクト出力
 artifacts:
   files:
-    - imagedefinitions.json
+    - IMAGEDEF_APP_FILE_NAME
+    - $IMAGEDEF_BATCH_FILE_NAME
+    - $IMAGEDEF_AUTT_FILE_NAME
   name: build-$(date +%Y-%m-%d_%H%M).zip
