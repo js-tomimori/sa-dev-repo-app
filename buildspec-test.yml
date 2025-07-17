@@ -2,8 +2,8 @@ version: 0.2
  
 env:
   variables:
-    CLUSTER_NAME: "sa-ita-ecscls-app-poc"
-    SERVICE_NAME: "sa-ita-ecssvc-webautt-poc"
+    # CLUSTER_NAME: "sa-ita-ecscls-app-poc"
+    # SERVICE_NAME: "sa-ita-ecssvc-webautt-poc"
     CONTAINER_PORT: 80
  
 phases:
