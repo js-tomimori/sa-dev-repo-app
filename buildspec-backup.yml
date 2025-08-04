@@ -1,0 +1,39 @@
+version: 0.2
+
+env:
+  # git認証情報ヘルパーを有効化##
+  git-credential-helper: yes
+  # variables:
+  #   ENV: "ut"
+  # parameter-store:
+  #   USER_NAME: "git-user-name"
+  #   PAT: "git-pat"
+
+phases:
+  pre_build:
+    commands:
+      # タイムゾーンをJSTへ変換
+      - export TZ="Asia/Tokyo"
+      # - echo $ENV
+  # # リモートリポジトリ確認
+  # - git remote -v
+  # - git branch
+      # ユーザー情報
+      - git config --global user.email daiki.tomimori@japan-systems.co.jp
+      - git config --global user.name "daiki tomimori"
+   # masterブランチのみクローン
+      - git clone --branch master --single-branch https://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME} master_only_repo
+  build:
+    commands:
+      # .gitディレクトリを含めてzip化
+      - cd master_only_repo
+      - zip -r ../master-branch-backup.zip . 
+      - cd ..
+  post_build:
+    commands:
+      # S3にアップロード
+      - aws s3 cp master-branch-backup.zip s3://sa-dev-s3-cicd-js/backups/master-branch-backup-$(date +%Y%m%d-%H%M%S).zip
+ 
+artifacts:
+  files:
+    - master-branch-backup.zip
