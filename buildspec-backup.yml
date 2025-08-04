@@ -23,18 +23,22 @@ phases:
       - git config --global user.name "daiki tomimori"
    # masterブランチのみクローン
       # - git clone --branch master --single-branch https://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME} master_only_repo
-      - git clone --branch master --single-branch https://github.com/js-tomimori/sa-dev-repo-app.git master_only_repo
+      # - git clone --branch master --single-branch https://github.com/js-tomimori/sa-dev-repo-app.git master_only_repo
+      - git clone --mirror https://github.com/js-tomimori/sa-dev-repo-app.git fullrepo.git
   build:
     commands:
       # .gitディレクトリを含めてzip化
-      - cd master_only_repo
-      - zip -r ../master-branch-backup.zip . 
-      - cd ..
+      # - cd master_only_repo
+      # - zip -r ../master-branch-backup.zip . 
+      # - cd ..
+      - zip -r backup-with-git.zip fullrepo.git
   post_build:
     commands:
       # S3にアップロード
-      - aws s3 cp master-branch-backup.zip s3://sa-dev-s3-cicd-js/backups/master-branch-backup-$(date +%Y%m%d-%H%M%S).zip
+      # - aws s3 cp master-branch-backup.zip s3://sa-dev-s3-cicd-js/backups/master-branch-backup-$(date +%Y%m%d-%H%M%S).zip
+      - aws s3 cp backup-with-git.zip s3://sa-dev-s3-cicd-js/backups/master-branch-backup-$(date +%Y%m%d-%H%M%S).zip
  
 artifacts:
   files:
-    - master-branch-backup.zip
+    - backup-with-git.zip
+    # - master-branch-backup.zip
