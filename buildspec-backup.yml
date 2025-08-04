@@ -22,7 +22,8 @@ phases:
       - git config --global user.email daiki.tomimori@japan-systems.co.jp
       - git config --global user.name "daiki tomimori"
    # masterブランチのみクローン
-      - git clone --branch master --single-branch https://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME} master_only_repo
+      # - git clone --branch master --single-branch https://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME} master_only_repo
+      - git clone --branch master --single-branch https://github.com/js-tomimori/sa-dev-repo-app.git master_only_repo
   build:
     commands:
       # .gitディレクトリを含めてzip化
